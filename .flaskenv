@@ -1,1 +1,1 @@
-FLASK_APP=backend.py
+FLASK_APP=backend/backend.py
