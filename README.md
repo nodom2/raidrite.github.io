@@ -4,6 +4,14 @@ Open Pycharm.  If you have not cloned this repo, you can open it directly from P
 in the Welcome dialog box that pops up (assuming you have no other projects open).  Alternatively, you can clone this repo 
 and create a pycharm project on that directory.  
 
+## Switching `git` branches in Pycharm & Committing to Github
+To switch to a different branch in Pycharm, look at the bottom-right corner of the IDE.  You should see `Git: master` 
+(or some other branch name).  If you click that, you'll see a few choices for *remote* branches.  When you switch branches 
+in Pycharm, it also switches what files you see in your OS (as far as I know).  So if you need to add a file to a branch, 
+you can switch inside the IDE this way or use some command line utility to switch branches manually.  To commit changes 
+to a branch in Pycharm, click the green check mark in the top right or click `VCS -> Commit` from the top menu.  After 
+you commit changes, you still need to push them to github.  You can do this by hitting `ctrl/cmd + shift + k` or clicking 
+`VCS -> Git -> Push` from the top menu.
 
 ### Setting up the Project Interpreter
 Next, we have to tell Pycharm where to find whatever version of Python we'll be using.  Press `ctrl + alt + S` to open 
@@ -17,8 +25,8 @@ directory navigate to `venv\Scripts\python.exe`.  Click `Ok` several times to ge
 
 ##### If this doesn't work for you....
 If setting up the project interpreter as described doesn't work for you then you will need to create a new virtual environment
-(outside the working directory of this project) and then install the libraries for this project using 
-`pip` with `requirements.txt` *while the new virtual environment is active*.  If you created a new virtual environment
+(outside the working directory of this project) and then install the libraries for this project using `pip` with 
+`requirements.txt` *while the new virtual environment is active*.  If you created a new virtual environment
 for this project, click `Terminal` at the very bottom of Pycharm.  *Make sure that you are working on the intended branch* 
 (`twitch-client` in this case), and then run `pip install -f requirements.txt`.  
 
