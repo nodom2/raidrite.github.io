@@ -120,7 +120,6 @@ class TwitchAccount(ABC):
             except KeyError:
                 # A nonfatal KeyError is thrown for the pagination cursor when user has zero followers
                 pass
-    # TODO: Possibly reformat retained json responses to omit redundant 'to_id' and 'to_name' for Streamers
             # Get total from json response, irrespective of Streamer/non-Streamer self.total_followers
             total_follows = resp['total']
             # Get first 100 follows
@@ -128,7 +127,7 @@ class TwitchAccount(ABC):
             # Collect all remaining follows
             for next_100 in range(100, total_follows, 100):
                 resp = sess.get(base_url, params=q_params, headers=bear_token).json()
-                # Add next_100 key to results dict (like '200' as '2'+'00')
+                # Add next_100 key to results dict (like '100', '200', etc.)
                 result[str(next_100)] = resp['data']
                 # Update pagination cursor for next 100
                 q_params['after'] = resp['pagination']['cursor']
