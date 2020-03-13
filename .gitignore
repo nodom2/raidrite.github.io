@@ -1,3 +1,4 @@
 app/settings.py
-/app/logs/*
+/logs/*
+!/logs/.gitignore
 .idea/

@@ -1,0 +1,4 @@
+# Added this so that the logs directory will be committed to github (but still appear empty).
+# This is necessary so that the logs directory can be added to this project's .gitignore without committing any/all
+# logs that were generated during development.  This also prevents 'logger' from crashing because the logs directory
+# does not exist.

@@ -7,16 +7,19 @@ logger = logging.getLogger()
 
 
 def main():
-    db = neo4_db.Neo4jDB()
-    #db.find_or_add_streamer('stroopc')
+    # Get info about a streamer from twitch
     tmp_twitch_streamer = TwitchStreamer('stroopC')
+    fols = tmp_twitch_streamer.get_all_follows()
+
+    for each_hundred_list in fols.keys():
+        print(fols[each_hundred_list])
+
+    #db = neo4_db.Neo4jDB()
+    #db.find_or_add_streamer('stroopc')
     #folls = tmp_twitch_streamer.get_all_follows()
-    streamer_node = db.create_streamer_node(tmp_twitch_streamer)
-    db.add_streamer_folls_from_twitch(tmp_twitch_streamer, streamer_node)
+    #streamer_node = db.create_streamer_node(tmp_twitch_streamer)
+    #db.add_streamer_folls_from_twitch(tmp_twitch_streamer, streamer_node)
 
-
-
-    print("debug")
     pass
 
 
