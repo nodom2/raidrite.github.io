@@ -39,7 +39,7 @@ shared google drive folder (in the `Code-Related` folder).  Before copying, make
 is *active* (`twitch-client` in this case).  Copy `settings.py` to the `app/` folder of this project.  This file contains
 the secret key from twitch (which is why it's not included in this repo). 
 
-### Verifying Success
+### Verifying Success by Running Unit Tests
 After copying `settings.py` to the `app/` folder, you can check whether you're good to go by running one of the unit tests.  
 Navigate to `app\tests\` in the `Project` tab in the left pane of Pycharm and double click to open one of the unit test 
 files.  You should see a green play button next to the `class Test...` definition.  Click it to run tests.
