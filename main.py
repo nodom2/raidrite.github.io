@@ -5,7 +5,7 @@ import logging
 # Create a new logger instance for this application
 logger = logging.getLogger()
 
-
+# This is just a demo; also useful for debugging.
 def main():
     # Get info about a streamer from twitch
     tmp_twitch_streamer = TwitchStreamer('stroopC')

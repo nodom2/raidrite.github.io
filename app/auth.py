@@ -23,5 +23,6 @@ class Auth:
                     'Authorization':  'Bearer ' + self.auth_tok['access_token'],
                     'Client_ID':      self.client_id
                     }
+            return {**self.auth_tok, **self.bear_tok}
         else:
-            return {'auth_tok': self.auth_tok, 'bear_tok': self.bear_tok}
+            return {**self.auth_tok, **self.bear_tok}
