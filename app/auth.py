@@ -23,6 +23,7 @@ class Auth:
                     'Authorization':  'Bearer ' + self.auth_tok['access_token'],
                     'Client_ID':      self.client_id
                     }
+            # This syntax merges two dictionaries into a single dictionary
             return {**self.auth_tok, **self.bear_tok}
         else:
             return {**self.auth_tok, **self.bear_tok}
