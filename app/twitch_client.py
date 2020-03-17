@@ -5,19 +5,18 @@ from app.auth import Auth
 from abc import ABC
 
 module_logger = logging.getLogger(__name__+'.py')
-
-
-def get_auth_token() -> Auth:
-    # Request an Authorization Token from Twitch
-    return Auth(settings.TWITCH_CLIENT_ID, settings.TWITCH_CLIENT_SECR)
+auth_args = {'client_id': settings.TWITCH_CLIENT_ID, 'client_secret': settings.TWITCH_CLIENT_SECRET}
+auth_token = Auth(**auth_args)
 
 
 def validate_name(given_name: str) -> dict:
-    """This function validates a given_name using Twitch's API and returns a dictionary.
-
+    """
+    This function validates a given_name using Twitch's API and returns a dictionary.  No authorization token is
+    required for this request (only a valid client_id, read from `settings.py`)
+    
     :param str given_name: a streamer's name to be validated
     :return: a dictionary containing key-value pairs as: 'profile_img_url', 'display_name', 'login_name', 'twitch_uid',
-    'broadcaster_type', and 'is_valid' (boolean value)
+    'broadcaster_type', and 'valid' (boolean value)
     :rtype: dict
     """
     if given_name is None:
@@ -62,29 +61,26 @@ def validate_name(given_name: str) -> dict:
     return result
 
 
-def get_total_follows_count(twitch_uid: str, to_from: str, auth_tok: Auth = None) -> str:
+def get_total_follows_count(twitch_uid: str, to_from: str) -> str:
     """
     This function gets a follow count from twitch (either followers or followings)
 
     :param str twitch_uid: A twitch user id.  No validation is performed; assumed valid.
     :param str to_from:  When 'to_id", returns followers collection; when 'from_id' returns "followings" collection
-    :param Auth auth_tok: An authorization token provided by twitch; Auth object expected.
     :return: A count of followers as a String
     :rtype: str
     """
 
-    if auth_tok is None:
-        auth_tok = get_auth_token()
     base_url = 'https://api.twitch.tv/helix/users/follows'
     query_params = {to_from: twitch_uid, 'first': 1}
-    client_id = {'Client-ID': auth_tok.client_id}
+    client_id = {'Client-ID': settings.TWITCH_CLIENT_ID}
     with requests.get(base_url, params=query_params, headers=client_id) as req:
         resp = req.json()['total']
 
     return resp
 
 
-def get_all_follows(given_uid: str, to_or_from_id: str, auth_token: Auth = None) -> dict:
+def get_all_follows(given_uid: str, to_or_from_id: str) -> dict:
     """
     This function gets followers/followings for a given uid.  This works for collecting followers *to* a streamer
     as well as followings *from* general Twitch users.
@@ -92,16 +88,11 @@ def get_all_follows(given_uid: str, to_or_from_id: str, auth_token: Auth = None)
     :param str given_uid: The uid whose followings will be collected. No validation performed; assumed valid.
     :param str to_or_from_id: Either 'to_id' (for followers *to* a streamer) or 'from_id' (for followers *from*
     a regular user); typically self.to_from may be supplied
-    :param Auth auth_token: The authorization token created by an Auth object; a bearer token is required for quick,
-    repeated calls to Twitch API when collecting followers.
     :return: A dictionary containing 'total_followers' with 'n' keys for each 100 followings
     :rtype: dict
     """
-
-    if auth_token is None:
-        bear_token = get_auth_token().bear_tok
-    else:
-        bear_token = auth_token.bear_tok
+    auth_token.validate()
+    bear_token = auth_token.bear_tok
 
     # Twitch API request parameters
     base_url = 'https://api.twitch.tv/helix/users/follows'
@@ -140,20 +131,13 @@ class TwitchAccount(ABC):
     class can be used with the DB to lookup a user, add/update a user in the DB, and verify that DB records coincide
     with Twitch records (e.g., total_followers, or follow_list)
     """
-
-    def __init__(self, auth=None):
+    def __init__(self):
         self.display_name = None
         self.name = None
         self.twitch_uid = None
         self.is_streamer = False
         self.twitch_follow_list = None
         self.to_from = None
-
-        # Set Authorization token from Twitch for API requests if not supplied
-        if auth is None:
-            self.twitch_auth = get_auth_token()
-
-        pass
 
     def validate_attributes(self):
         """
@@ -165,23 +149,20 @@ class TwitchAccount(ABC):
         if self.to_from is None:
             raise ValueError("A follower direction (to_id or from_id) must be provided but was 'None'")
 
-        return
-
     def get_all_follows(self):
         self.validate_attributes()
         if self.twitch_follow_list is None:
             module_logger.info('No followers list set.  Collecting a list of ALL followers from Twitch...')
-            self.twitch_follow_list = get_all_follows(self.twitch_uid, self.to_from, self.twitch_auth)
+            self.twitch_follow_list = get_all_follows(self.twitch_uid, self.to_from)
 
         return self.twitch_follow_list
 
     def get_total_follows_count(self):
         self.validate_attributes()
-        return get_total_follows_count(self.twitch_uid, self.to_from, self.twitch_auth)
+        return get_total_follows_count(self.twitch_uid, self.to_from)
 
 
 class TwitchStreamer(TwitchAccount):
-
     def __init__(self, streamer_name: str):
         try:
             valid_streamer = validate_name(str(streamer_name))
@@ -201,11 +182,8 @@ class TwitchStreamer(TwitchAccount):
         # Fetch a count of total followers for this streamer
         self.total_followers = super().get_total_follows_count()
 
-        pass
-
 
 class TwitchUser(TwitchAccount):
-
     def __init__(self, **kwargs):
         # Super class call
         super().__init__()
@@ -216,5 +194,3 @@ class TwitchUser(TwitchAccount):
 
         # Set to_from field for get_all_follows: gets list of people this user *is following*
         self.to_from = 'from_id'
-
-        pass

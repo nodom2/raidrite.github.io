@@ -5,13 +5,14 @@ import unittest
 
 class TestAuth(unittest.TestCase):
     def setUp(self):
-        self.test_auth = Auth(settings.TWITCH_CLIENT_ID, settings.TWITCH_CLIENT_SECR)
+        auth_args = {'client_id': settings.TWITCH_CLIENT_ID, 'client_secret': settings.TWITCH_CLIENT_SECRET}
+        self.test_auth = Auth(**auth_args)
 
     def test_auth_has_cid(self):
         self.assertEqual(self.test_auth.client_id, settings.TWITCH_CLIENT_ID)
 
     def test_auth_has_secr(self):
-        self.assertEqual(self.test_auth.client_secret, settings.TWITCH_CLIENT_SECR)
+        self.assertEqual(self.test_auth.client_secret, settings.TWITCH_CLIENT_SECRET)
 
     def test_auth_has_auth_tok(self):
         self.assertTrue(hasattr(self.test_auth, 'auth_tok'))

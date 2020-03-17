@@ -45,7 +45,7 @@ class TestStreamer(unittest.TestCase):
 
     def test_Streamer_zero_follower_list_is_okay(self):
         zero_streamer = TwitchStreamer('prod3x')
-        # Has 0 total followers
+        # This twitch user has 0 total followers
         self.assertEqual(int(zero_streamer.get_total_follows_count()), int(0))
         foll_result = zero_streamer.get_all_follows()
         followers_count = 0
@@ -57,7 +57,7 @@ class TestStreamer(unittest.TestCase):
         self.assertFalse('100' in foll_result)
 
     def test_Streamer_small_follower_list_is_okay(self):
-        # Has 9 total followers
+        # This twitch user has 9 total followers
         very_small_streamer = TwitchStreamer('moJohat')
         foll_result = very_small_streamer.get_all_follows()
         followers_count = 0
