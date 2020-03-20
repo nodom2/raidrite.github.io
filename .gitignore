@@ -1,0 +1,5 @@
+/app/settings.py
+/logs/*
+!/logs/.gitignore
+.idea/
+/venv/
