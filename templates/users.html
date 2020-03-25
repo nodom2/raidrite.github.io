@@ -1,0 +1,6 @@
+<div> This is what we got: </div>
+<ul id='users'>
+  {% for user in users %}
+    <li><a href='https://twitch.tv/{{ user }}'>{{ user }}</a></li>
+  {% endfor %}
+</ul>
