@@ -10,7 +10,8 @@ def main():
     # Get info about a streamer from twitch
     tmp_twitch_streamer = TwitchStreamer('stroopC')
     db_streamer = neo4_db.create_from_twitch_streamer(tmp_twitch_streamer)
-    added_folls_dict = neo4_db.add_all_followers(tmp_twitch_streamer, db_streamer)
+    added_folls = neo4_db.add_all_followers(tmp_twitch_streamer, db_streamer)
+    print("")
 
     # For each follower in added_folls_dict, get a list of who they follow
     
@@ -47,7 +48,7 @@ def main():
 
         #db_streamer.save()
 
-    add_to_db(tmp_twitch_streamer)
+    #add_to_db(tmp_twitch_streamer)
 
 
 
