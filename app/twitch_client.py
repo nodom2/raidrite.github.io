@@ -79,7 +79,7 @@ def get_total_follows_count(twitch_uid: str, to_from: str) -> str:
 
     return resp
 
-
+# TODO: Refactor followers result/acculumulator to use json + json.append ?
 def get_all_follows(given_uid: str, to_or_from_id: str) -> dict:
     """
     This function gets followers/followings for a given uid.  This works for collecting followers *to* a streamer
@@ -172,13 +172,17 @@ class TwitchStreamer(TwitchAccount):
 
         # Super class call
         super().__init__()
+
+        self.profile_img_url = None
+        self.broadcaster_type = None
+        self.is_streamer = True
+        # Set to_from field for get_all_follows: get dict of people this user *is followed by*
+        self.to_from = 'to_id'
+
         # Set attributes using validate_name() results (a dict)
         for k, v in valid_streamer.items():
             setattr(self, k, v)
 
-        self.is_streamer = True
-        # Set to_from field for get_all_follows: get dict of people this user *is followed by*
-        self.to_from = 'to_id'
         # Fetch a count of total followers for this streamer
         self.total_followers = super().get_total_follows_count()
 
@@ -194,3 +198,6 @@ class TwitchUser(TwitchAccount):
 
         # Set to_from field for get_all_follows: gets list of people this user *is following*
         self.to_from = 'from_id'
+
+        # Fetch a count of total followers for this streamer
+        self.total_followings = super().get_total_follows_count()
