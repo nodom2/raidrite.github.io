@@ -79,7 +79,7 @@ def get_total_follows_count(twitch_uid: str, to_from: str) -> str:
 
     return resp
 
-# TODO: Refactor followers result/acculumulator to use json + json.append ?
+
 def get_all_follows(given_uid: str, to_or_from_id: str) -> dict:
     """
     This function gets followers/followings for a given uid.  This works for collecting followers *to* a streamer
@@ -111,13 +111,11 @@ def get_all_follows(given_uid: str, to_or_from_id: str) -> dict:
         # Get total from json response, irrespective of Streamer/non-Streamer self.total_followers
         total_follows = resp['total']
         # Get first 100 follows
-        #result = {'000': resp['data']}
         result = resp['data']
         # Collect all remaining follows, a list of 100 or less
         for next_100 in range(100, total_follows, 100):
             resp = sess.get(base_url, params=q_params, headers=bear_token).json()
             # Add next_100 key to results dict (like '100', '200', etc.)
-            #result[str(next_100)] = resp['data']
             result.extend(resp['data'])
             # Update pagination cursor for next 100
             q_params['after'] = resp['pagination']['cursor']
