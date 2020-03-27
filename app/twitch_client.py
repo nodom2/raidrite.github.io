@@ -80,7 +80,7 @@ def get_total_follows_count(twitch_uid: str, to_from: str) -> str:
     return resp
 
 
-def get_all_follows(given_uid: str, to_or_from_id: str) -> dict:
+def get_all_follows(given_uid: str, to_or_from_id: str, skip_validation: bool = False) -> dict:
     """
     This function gets followers/followings for a given uid.  This works for collecting followers *to* a streamer
     as well as followings *from* general Twitch users.
@@ -91,7 +91,9 @@ def get_all_follows(given_uid: str, to_or_from_id: str) -> dict:
     :return: A dictionary containing 'total_followers' with 'n' keys for each 100 followings
     :rtype: dict
     """
-    auth_token.validate()
+    # Added to avoid excessive token validation when unnecessary (e.g. when running this command a lot)
+    if not skip_validation:
+        auth_token.validate()
     bear_token = auth_token.bear_tok
 
     # Twitch API request parameters
