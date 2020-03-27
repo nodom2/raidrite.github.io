@@ -1,8 +1,9 @@
 from app import settings
 import logging
+import app.twitch_client as twitch_client
 from app.twitch_client import TwitchStreamer
 from py2neo import Graph
-from py2neo.ogm import GraphObject, Property, Label, RelatedTo, RelatedFrom
+from py2neo.ogm import GraphObject, Property, Label, RelatedTo
 
 module_logger = logging.getLogger(__name__+'.py')
 
@@ -86,51 +87,56 @@ def create_from_twitch_streamer(some_streamer: TwitchStreamer) -> User:
 
     except Exception as exc:
         module_logger.error("Failed to add streamer to db:  {}".format(some_streamer.display_name))
-        module_logger.error(exc.message, exc.args)
+        module_logger.error(exc)
 
     return db_streamer
 
-# TODO: Refactor so that this work with TwitchStreamer or TwitchUser objects (refactor to_from in these classes')
-# TODO: If creatinga "streamer set" from this result, then we do not need to return a dict (only a list/set of followers)
-def add_all_followers(some_streamer: TwitchStreamer, db_streamer: User) -> dict:
+
+def add_all_followers(some_streamer: TwitchStreamer, db_streamer: User) -> list:
     """
-    Adds all followers to db for a given TwitchAccount object and py2neo ogm object
+    Adds all followers to db for a given TwitchStreamer object and py2neo ogm object
     :param some_streamer:
     :param db_streamer:
-    :return:
+    :return: List of follower id's obtained from twitch
     """
+    # to_from = some_streamer.to_from
     foll_list = some_streamer.get_all_follows()
-    to_from = some_streamer.to_from
-    # A dictionary of {'twitch_uid': db_object}; useful for adding follower's followings
-    all_db_folls_dict = {}
 
-    for each_hundred in foll_list.keys():
-        for each_fol in foll_list[each_hundred]:
-            try:
-                db_follower = User()
-                db_follower.twitch_uid = each_fol['from_uid']
-                db_follower.display_name = each_fol['from_name']   # breaks on names like '抜け' without unicode encoding
-                db_follower.follows.add(db_streamer, properties={'followed at': each_fol['followed_at']})
-                # Commit to new follower to DB
-                db_follower.save()
-            except Exception as exc:
-                module_logger.error("Failed to add follower to db: {}".format(some_streamer.display_name))
-                module_logger.error(exc.message, exc.args)
+    for each_fol in foll_list:
+        db_follower = User()
+        try:
+            db_follower.twitch_uid = each_fol['from_id']
+            # db_follower.display_name = each_fol['from_name']   # breaks on names like '抜け' without unicode encoding
+            db_follower.follows.add(db_streamer, properties={'followed at': each_fol['followed_at']})
+            # Commit to new follower to DB
+            db_follower.save()
+        except Exception as exc:
+            module_logger.error("Failed to add follower to db: {}".format(each_fol['from_name']))
+            module_logger.error(exc)
 
-            all_db_folls_dict[db_follower.twitch_uid] = db_follower
-
-    return all_db_folls_dict
+    # Return a list of follower id's from twitch
+    return [each_fol['from_id'] for each_fol in foll_list]
 
 
-def get_streamer_set_from_foll_dict(db_folls_dict: dict):
+# TODO: move this to twitch client?  it performs ZERO db operations
+def get_streamer_set_from_foll_list(streamers_foll_list: list):
     """
-    Takes a dictionary of {twitch_uid: db_follower} and creates a set of streamers that all followers follow
+    Takes a list of twitch_ud (followers) and returns a list of streamer names that all users follow
 
-    :param db_folls_dict:
-    :return:
+    :param streamers_foll_list: List of user id's to determine their followings
+    :return: List of unique streamer names that all users in list follow
     """
-    all_streamers = {}
+    all_streamers = set()
+    dont_validate_auth_token = True
 
-    for each_foll_id in db_folls_dict.keys():
+    for each_foll_id in streamers_foll_list:
         # Get a list of who a follower follows & add it to all_streamers list
+        for each_streamer in twitch_client.get_all_follows(each_foll_id, 'from_id', dont_validate_auth_token):
+            all_streamers.add(each_streamer['to_name'])
+
+    try:
+        all_streamers.remove('')
+    except:
         pass
+
+    return list(all_streamers)
