@@ -37,6 +37,7 @@ def validate_name(given_name: str) -> dict:
     module_logger.info("Twitch API - 'validate_name()' for: " + '"{}"'.format(str(given_name)))
     # Request user information from Twitch API
     with requests.get(base_url, params=query_params, headers=client_id) as req:
+        req.encoding = 'utf-8'
         resp = req.json()['data']
         # Supplied name was found if len(resp['data'])  > 0
         if len(resp) == 0:
@@ -88,6 +89,7 @@ def get_all_follows(given_uid: str, to_or_from_id: str, skip_validation: bool = 
     :param str given_uid: The uid whose followings will be collected. No validation performed; assumed valid.
     :param str to_or_from_id: Either 'to_id' (for followers *to* a streamer) or 'from_id' (for followers *from*
     a regular user); typically self.to_from may be supplied
+    :param bool skip_validation: Skips validating the authentication token when True; useful when called many times
     :return: A dictionary containing 'total_followers' with 'n' keys for each 100 followings
     :rtype: dict
     """
@@ -187,6 +189,17 @@ class TwitchStreamer(TwitchAccount):
 
         # Fetch a count of total followers for this streamer
         self.total_followers = super().get_total_follows_count()
+
+    def as_dict(self) -> dict:
+        result = {'twitch_uid':         self.twitch_uid,
+                  'name':               self.name,
+                  'display_name':       self.display_name,
+                  'streamer':           self.is_streamer,
+                  'profile_img_url':    self.profile_img_url,
+                  'broadcaster_type':   self.broadcaster_type,
+                  'total_followers':    self.total_followers
+                  }
+        return result
 
 
 class TwitchUser(TwitchAccount):
