@@ -1,0 +1,110 @@
+html{
+    height: 100%;
+}
+body{
+    margin: 0px;
+    font-family: Roboto, sans-serif;
+    background-color: rgb(32, 34, 37);
+    height: 100%;
+}
+
+.navbar{
+    display: grid;
+    grid-template-columns: 160px auto 150px;
+    grid-template-rows: 50px;
+    background-color: rgb(54, 57, 63);
+    gap: 10px 10px;
+    padding: 10px;
+    box-shadow: 0px 2px 5px rgba(30, 30, 30, 0.5);
+}
+.navlinks{
+
+    line-height: 20px;
+    padding-top: 16px;
+    padding-left: 40px;
+    
+}
+
+.navlink{
+    font-family: Roboto, sans-serif;
+    font-size: 26px;
+    font-weight: 300;
+    text-decoration: none;
+    color: rgb(226, 226, 226);
+    padding-left: 10px;
+}
+.navlink:hover{
+
+    color: white;
+
+}
+
+.searchbar{
+    border-radius: 40px;
+    padding: 4px 10px;
+    height: 26px;
+    margin-top: 10px;
+    border: none;
+    background-color:rgb(226, 226, 226);
+    box-shadow: inset 0px 2px 5px rgba(30, 30, 30, 0.5);
+}
+input[type='text']{
+    font-family: Roboto, sans-serif;
+    font-weight: 400;
+    font-size: 20px;
+    color: rgb(32, 34, 37);
+    text-decoration: none;
+}
+
+input:focus, textarea:focus, select:focus{
+    outline: none;
+}
+
+.nav_active{
+    font-weight: 900;
+}
+
+#content_home{
+
+    height: 100%;
+    grid-template-columns: auto 470px 470px auto;
+    grid-template-rows: 30% 200px;
+    gap: 20px 100px;
+}
+
+.home_greeting{
+    grid-column-start: 2;
+    grid-row-start: 2;
+    font-family: Roboto, sans-serif;
+    font-weight: 300;
+    font-size: 50px;
+    color: rgb(226, 226, 226);
+    text-align: right;
+}
+
+.home_search{
+    grid-column-start: 3;
+    grid-row-start: 2;
+}
+
+.home_searchbar{
+    border-radius: 40px;
+    padding: 4px 20px;
+    height: 40px;
+    margin-top: 40px;
+    width: 420px;
+    border: none;
+    background-color:rgb(226, 226, 226);
+    box-shadow: inset 0px 2px 5px rgba(30, 30, 30, 0.5);
+}
+.pages{
+    height: calc(100% - 70px);
+}
+
+.content_container{
+    display: none;
+}
+
+.content_active{
+    display: grid;
+}
