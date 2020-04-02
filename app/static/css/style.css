@@ -237,3 +237,13 @@ input:focus, textarea:focus, select:focus{
         text-align: center;
     }
   }
+
+
+
+ #content_about, #content_feedback{
+    height: 70%;
+    width: 100%;
+    background-image: url(../media/construction.png);
+    background-repeat: no-repeat;
+    background-position: center;
+  }
