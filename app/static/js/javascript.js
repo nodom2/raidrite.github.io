@@ -73,10 +73,10 @@ function init(){
 function search(event){
 
     location.search = "?id=" + document.getElementById("topsearch").value;
-    
+
 }
 
 
-window.onload = () => {updateNav(); init()};
-window.onhashchange = () => updateNav();
+window.addEventListener("load", () => {updateNav(); init()});
+window.addEventListener("hashchange",() => updateNav());
 
