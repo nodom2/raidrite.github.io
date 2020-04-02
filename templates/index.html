@@ -19,21 +19,20 @@
 </head>
 
 <body>
-
     <div class="navbar">
 
         <img src="static/media/logo_nav_full.png" width="160px" height="43px">
 
         <span id="nav_links" class="navlinks">
-
             <a id="nav_home" class="navlink nav_active" href="#Home">HOME</a>
             <a id="nav_about" class="navlink" href="#About">ABOUT</a>
             <a id="nav_feedback" class="navlink" href="#Feedback">FEEDBACK</a>
-
+            <a id="nav_results" class="navlink" href="#Results"></a>
         </span>
-
-        <input class="searchbar" type="text" spellcheck="false" >
-        
+        <form class="searchbar_wrapper">
+            <input id="topsearch" class="searchbar" type="text" spellcheck="false" >
+            <button type="submit">&#128270;</button>
+        </form>
     </div>
      
     <div id="pages" class="pages">
@@ -44,7 +43,10 @@
                 Take the guesswork out of raiding.
             </div>
             <div class="home_search">
-                <input class="home_searchbar" type="text" spellcheck="false" >
+                <form class="searchbar_wrapper">
+                    <input id="midsearch" class="home_searchbar" type="text" spellcheck="false" >
+                    <button type="submit">&#128270;</button>
+                </form>
             </div>
 
         </div>
