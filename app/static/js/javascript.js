@@ -8,7 +8,7 @@ function updateNav(){ //Updates Navbar and currently displayed content based on 
 
     for (let i = 0; i < navLinks.length; i++) { 
 
-        let link = navLinks[i]
+        let link = navLinks[i];
 
         let id = link.id.substr(4, link.id.length).toLowerCase();
 
@@ -42,6 +42,41 @@ function updateNav(){ //Updates Navbar and currently displayed content based on 
 
 }
 
+function init(){
 
-window.onload = () => updateNav();
-window.onhashchange = () => updateNav();
+
+    //Update both search bars when value is changed. Needs to be optimized/rewritten.
+    let topsearch = document.getElementById("topsearch");
+    let midsearch = document.getElementById("midsearch");
+    topsearch.addEventListener("input", () => {midsearch.value = topsearch.value});
+    midsearch.addEventListener("input", () => {topsearch.value = midsearch.value});
+
+
+    //Handle firing of search function on form submission.
+    document.getElementsByClassName("searchbar_wrapper")[0].addEventListener("submit", (event)=>{event.preventDefault(); search(event)});
+    document.getElementsByClassName("searchbar_wrapper")[1].addEventListener("submit", (event)=>{event.preventDefault(); search(event)});
+
+
+    //Check if url already contains username to search, whether from a saved bookmark or from submitting searchbar form.
+    searchParams = new URLSearchParams(location.search);
+
+    if(searchParams.has("id")){
+
+        midsearch.value = searchParams.get("id");
+        topsearch.value = searchParams.get("id");
+        document.getElementById("nav_results").innerHTML = searchParams.get("id").toUpperCase();
+
+    }
+    
+}
+
+function search(event){
+
+    location.search = "?id=" + document.getElementById("topsearch").value;
+
+}
+
+
+window.addEventListener("load", () => {updateNav(); init()});
+window.addEventListener("hashchange",() => updateNav());
+
