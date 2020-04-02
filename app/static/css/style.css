@@ -150,3 +150,90 @@ input:focus, textarea:focus, select:focus{
 .content_active{
     display: grid;
 }
+
+.menu_button{
+    font-size: 30px;
+    color:rgb(226, 226, 226);
+    background: transparent;
+    display: none;
+    border: none;
+    border-radius: 5px;
+    
+}
+
+.Logo{
+    min-width: 160px;
+    min-height: 43px;
+    width: 160px;
+    height: 43px;
+    background-image: url(../media/logo_nav_full.png);
+    background-repeat: no-repeat;
+}
+
+@media only screen and (max-width: 850px) {
+
+    .Logo{
+        min-width: 73px;
+        min-height: 43px;
+        width: 73px;
+        height: 43px;
+        background-image: url(../media/logo_nav_short.png);
+        background-repeat: no-repeat;
+    }
+    .navbar{
+        grid-template-columns: 73px auto 200px;
+        gap: 10px 10px;
+        padding: 10px;
+    }
+    .navlinks{
+        padding-left: 10px;
+    }
+
+
+}
+
+
+
+
+@media only screen and (max-width: 730px) {
+
+    .navlinks{
+
+        display: none;
+        
+    }
+
+    .menu_button{
+
+        display: inline;
+
+    }
+
+   
+
+    .navbar{
+        grid-template-columns: 73px auto 40px;
+        gap: 10px 10px;
+        padding: 10px;
+    }
+
+    .home_search{
+        display: none;
+    }
+
+    #content_home{
+
+        height: 100%;
+        grid-template-columns: auto ;
+        grid-template-rows: 5% 200px;
+        gap: 20px 20px;
+
+    }
+
+    .home_greeting{
+        grid-column-start: 1;
+        grid-row-start: 2;
+
+        text-align: center;
+    }
+  }
