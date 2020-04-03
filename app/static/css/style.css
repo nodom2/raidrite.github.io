@@ -246,4 +246,5 @@ input:focus, textarea:focus, select:focus{
     background-image: url(../media/construction.png);
     background-repeat: no-repeat;
     background-position: center;
+    background-size: min(100%, 600px);
   }
